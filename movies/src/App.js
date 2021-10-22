@@ -41,7 +41,7 @@ function App() {
       <header className="App-header">
         <p>
           {
-            name.map((value) => `Filme: ${value.name}`)
+            name != null ? name.map((value) => `Filme: ${value.name} <br>`) : "Without name"
           }
         </p>
       </header>

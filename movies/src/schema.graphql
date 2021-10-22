@@ -1,17 +1,21 @@
-yarn run v1.22.10
-$ /home/maciel/Projects/movies-front/movies/node_modules/.bin/get-graphql-schema http://localhost:4000/graphql
 schema {
   query: Query
   mutation: Mutations
 }
 
-"""Exposes a URL that specifies the behaviour of this scalar."""
+"""
+Exposes a URL that specifies the behaviour of this scalar.
+"""
 directive @specifiedBy(
-  """The URL that specifies the behaviour of this scalar."""
+  """
+  The URL that specifies the behaviour of this scalar.
+  """
   url: String!
 ) on SCALAR
 
-"""Graphql Movie Type"""
+"""
+Graphql Movie Type
+"""
 type movie {
   id: ID
   name: String
@@ -28,5 +32,3 @@ type Mutations {
 type Query {
   movies: [movie]
 }
-
-Done in 0.84s.

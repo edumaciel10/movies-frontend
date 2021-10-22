@@ -14,11 +14,9 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "relay": "relay-compiler --src ./src --schema ./schema.graphql --extensions js jsx"
+    "relay": "yarn run relay-compiler --src ./src/ --schema ./src/schema.graphql --extensions js jsx --watchman false $@",
+    "start": "yarn run relay && react-scripts start",
+    "build": "yarn run relay && react-scripts build"
   },
   "eslintConfig": {
     "extends": [
