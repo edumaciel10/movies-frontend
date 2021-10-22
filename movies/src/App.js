@@ -1,52 +1,48 @@
-// your-app-name/src/App.js
 import React from 'react';
 import './App.css';
 import fetchGraphQL from './fetchGraphQL';
+import graphql from 'babel-plugin-relay/macro';
+import {
+  RelayEnvironmentProvider,
+  loadQuery,
+  usePreloadedQuery,
+} from 'react-relay/hooks';
+import RelayEnvironment from './RelayEnvironment';
 
-const { useState, useEffect } = React;
+const { Suspense } = React;
 
-function App() {
-  // We'll load the name of a repository, initially setting it to null
-  const [name, setName] = useState(null);
-
-  // When the component mounts we'll fetch a repository name
-  useEffect(() => {
-    let isMounted = true;
-    fetchGraphQL(`
-      query getMovies { 
-        movies {
-          name,
-        }
-      }
-    `).then(response => {
-      // Avoid updating state if the component unmounted before the fetch completes
-      if (!isMounted) {
-        return;
-      }
-      const data = response.data;
-      console.log(data.movies);
-      setName(data.movies);
-    }).catch(error => {
-      console.error(error);
-    });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [fetchGraphQL]);
-
-  // Render "Loading" until the query completes
+const getMoviesQuery = graphql`
+  query GetMoviesQuery { 
+    movies {
+      name,
+    }
+  }
+`
+const preloadedQuery = loadQuery(RelayEnvironment, getMoviesQuery, {
+  /* query variables */
+});
+function App(props) {
+  const data = usePreloadedQuery(getMoviesQuery, props.preloadedQuery);
   return (
     <div className="App">
       <header className="App-header">
         <p>
           {
-            name != null ? name.map((value) => `Filme: ${value.name} <br>`) : "Without name"
+            data.movies != null ? data.movies.map((value) => `Filme: ${value.name}`) : "Without name"
           }
         </p>
       </header>
     </div>
   );
 }
+function AppRoot(props) {
+  return (
+    <RelayEnvironmentProvider environment={RelayEnvironment}>
+      <Suspense fallback={'Loading...'}>
+        <App preloadedQuery={preloadedQuery} />
+      </Suspense>
+    </RelayEnvironmentProvider>
+  );
+}
 
-export default App;
+export default AppRoot;
